@@ -1,5 +1,5 @@
 {
-  "name": "grammy-vercel-edge",
+  "name": "amundsen",
   "author": "Vladislav Ponomarev <PonomareVlad@users.noreply.github.com> (https://PonomareVlad.ru)",
   "funding": "https://PonomareVlad.ru/donate",
   "license": "MIT",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "grammy": "^1.19.1",
-    "vercel-grammy": "^0.2.1"
+    "vercel-grammy": "^0.2.2"
   },
   "devDependencies": {
     "dotenv": "^16.3.1"
