@@ -11,11 +11,19 @@
     "start": "node --watch -r dotenv/config scripts/start.mjs"
   },
   "dependencies": {
+    "@grammyjs/conversations": "^1.1.2",
+    "@grammyjs/storage-mongodb": "^2.4.0",
     "grammy": "^1.19.1",
+    "grammy-debug-edge": "^0.0.0",
+    "mongo-realm-web-wrapper": "github:PonomareVlad/mongo-realm-web-wrapper",
     "vercel-grammy": "^0.2.2"
   },
   "devDependencies": {
     "dotenv": "^16.3.1"
+  },
+  "overrides": {
+    "bson": "npm:@ponomarevlad/bson@6.2.0-no-tla.2",
+    "o-son": "npm:@ponomarevlad/o-son@1.0.1-web.1"
   },
   "engines": {
     "node": "^18.0.0"

@@ -1,6 +1,21 @@
-import {Bot} from "grammy";
+import "grammy-debug-edge";
+import {
+    MongoRealmClient
+} from "mongo-realm-web-wrapper";
+import {
+    MongoDBAdapter
+} from "@grammyjs/storage-mongodb";
+import {
+    conversations,
+    createConversation
+} from "@grammyjs/conversations";
+import {Bot, session} from "grammy";
 
 export const {
+
+    DATA_API_URL: url,
+    DATA_API_KEY: key,
+    DATA_SOURCE_NAME: serviceName,
 
     // Telegram bot token from t.me/BotFather
     TELEGRAM_BOT_TOKEN: token,
@@ -12,6 +27,20 @@ export const {
 
 // Default grammY bot instance
 export const bot = new Bot(token);
+
+const mongo = new MongoRealmClient({url, key, serviceName});
+const collection = mongo.db("Amundsen").collection("users");
+
+bot.use(
+    session({
+        initial: () => ({
+            registered: new Date(),
+        }),
+        storage: new MongoDBAdapter({
+            collection
+        }),
+    })
+);
 
 // Sample handler for a simple echo bot
 bot.on("message:text", ctx => ctx.reply(ctx.msg.text));

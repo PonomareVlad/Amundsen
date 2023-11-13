@@ -1,5 +1,5 @@
-import {webhookCallback} from "grammy";
 import {bot, secretToken} from "../src/bot.mjs";
+import {webhookCallback} from "grammy";
 
 export const config = {runtime: "edge"};
 
