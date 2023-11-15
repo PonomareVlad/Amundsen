@@ -42,5 +42,17 @@ bot.use(
     })
 );
 
+bot.use(conversations());
+
+async function registration(conversation, ctx) {
+
+    await ctx.reply("registration");
+
+}
+
+bot.use(createConversation(registration, "registration"));
+
+bot.command("start", ctx => ctx.conversation.enter("registration"));
+
 // Sample handler for a simple echo bot
 bot.on("message:text", ctx => ctx.reply(ctx.msg.text));
