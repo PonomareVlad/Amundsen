@@ -118,5 +118,4 @@ bot.use(createConversation(registration, "registration"));
 
 bot.command("start", ctx => ctx.conversation.reenter("registration"));
 
-// Sample handler for a simple echo bot
-bot.on("message:text", ctx => ctx.reply(ctx.msg.text));
+bot.on("message:text", ctx => ctx.reply("* Ожидание рассылки *"));
