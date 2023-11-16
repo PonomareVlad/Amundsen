@@ -80,7 +80,6 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
     const {
         contact: {message: {phone_number} = {}} = {}
     } = await conversation.waitFor(":contact");
-    console.debug(phone_number);
     await ctx.reply("* Выбор категории *", {
         reply_markup: Keyboard.from([Object.keys(categories)]).toFlowed(1).resized().oneTime()
     });
@@ -100,7 +99,7 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
     });
     const transport_name = await conversation.form.select(Object.keys(transports));
     const transport = transports[transport_name];
-    Object.assign(conversation.session.profile, {first_name, last_name, contact, category, transport});
+    Object.assign(conversation.session.profile, {first_name, last_name, phone_number, category, transport});
     switch (transport) {
         case "transfer":
             await ctx.reply("* Запрос адреса *");
