@@ -1,15 +1,21 @@
 import "grammy-debug-edge";
-import {
-    MongoRealmClient
-} from "mongo-realm-web-wrapper";
-import {
-    MongoDBAdapter
-} from "@grammyjs/storage-mongodb";
-import {
-    conversations,
-    createConversation
-} from "@grammyjs/conversations";
 import {Bot, session} from "grammy";
+import {MongoClient} from "mongo-realm-web-wrapper";
+import {MongoDBAdapter} from "@grammyjs/storage-mongodb";
+import {conversations, createConversation} from "@grammyjs/conversations";
+
+/**
+ * @typedef {import("grammy").Context} Context
+ * @typedef {import("@grammyjs/types").Chat} Chat
+ * @typedef {import("grammy").SessionFlavor} SessionFlavor
+ * @typedef {import("@grammyjs/storage-mongodb").ISession} ISession
+ * @typedef {import("mongo-realm-web-wrapper").Collection} Collection
+ * @typedef {import("@grammyjs/conversations").Conversation} Conversation
+ * @typedef {import("@grammyjs/conversations").ConversationFlavor} ConversationFlavor
+ *
+ * @typedef {{registered: Date} & Chat} SessionData
+ * @typedef {Context & ConversationFlavor & SessionFlavor<SessionData>} BotContext
+ */
 
 export const {
 
@@ -26,9 +32,9 @@ export const {
 } = process.env;
 
 // Default grammY bot instance
-export const bot = new Bot(token);
+export const bot = /** @type {Bot<BotContext>} */ new Bot(token);
 
-const mongo = new MongoRealmClient({url, key, serviceName});
+const mongo = new MongoClient({url, key, serviceName});
 const collection = mongo.db("Amundsen").collection("users");
 
 bot.use(
@@ -37,14 +43,14 @@ bot.use(
             registered: new Date(),
         }),
         storage: new MongoDBAdapter({
-            collection
-        }),
+            /** @type {Collection<ISession>} */ collection
+        })
     })
 );
 
 bot.use(conversations());
 
-async function registration(conversation, ctx) {
+async function registration(/** @type {Conversation<BotContext>} */ conversation, ctx) {
 
     await ctx.reply("registration");
 
