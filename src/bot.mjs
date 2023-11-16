@@ -1,5 +1,5 @@
 import "grammy-debug-edge";
-import {Bot, session} from "grammy";
+import {Bot, Keyboard, session} from "grammy";
 import {MongoClient} from "mongo-realm-web-wrapper";
 import {MongoDBAdapter} from "@grammyjs/storage-mongodb";
 import {conversations, createConversation} from "@grammyjs/conversations";
@@ -52,7 +52,25 @@ bot.use(conversations());
 
 async function registration(/** @type {Conversation<BotContext>} */ conversation, ctx) {
 
-    await ctx.reply("registration");
+    await ctx.reply("* Приветствие *");
+    await ctx.reply("* Запрос имени *", {
+        reply_markup: Keyboard.from([[ctx.chat.first_name]]).resized().oneTime()
+    });
+    const first_name = await conversation.form.text();
+    await ctx.reply("* Запрос фамилии *", {
+        reply_markup: Keyboard.from([[ctx.chat.last_name]]).resized().oneTime()
+    });
+    const last_name = await conversation.form.text();
+    await ctx.reply("* Запрос контактов *", {
+        reply_markup: new Keyboard().requestContact("Нажмите сюда").resized().oneTime()
+    });
+    const contact = await conversation.waitFor(":contact");
+    const categories = ["СМИ", "Риелтор", "блоггер"];
+    await ctx.reply("* Выбор категории *", {
+        reply_markup: Keyboard.from([categories]).toFlowed(1).resized().oneTime()
+    });
+    const category = await conversation.form.select(categories);
+    await ctx.reply("* Подтверждение участия *");
 
 }
 
