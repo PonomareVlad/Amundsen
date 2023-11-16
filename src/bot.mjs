@@ -63,27 +63,29 @@ bot.use(conversations());
 
 bot.command("start", (ctx, next) => next(ctx.conversation.exit("registration")));
 
+const inputErrorHandler = ctx => ctx.reply("* ошибка в формате *");
+
 async function registration(/** @type {Conversation<BotContext>} */ conversation, ctx) {
     conversation.session.profile = {};
     await ctx.reply("* Приветствие *");
     await ctx.reply("* Запрос имени *", {
         reply_markup: Keyboard.from([[ctx.chat.first_name]]).resized().oneTime()
     });
-    const first_name = await conversation.form.text();
+    const first_name = await conversation.form.text(inputErrorHandler);
     await ctx.reply("* Запрос фамилии *", {
         reply_markup: Keyboard.from([[ctx.chat.last_name]]).resized().oneTime()
     });
-    const last_name = await conversation.form.text();
+    const last_name = await conversation.form.text(inputErrorHandler);
     await ctx.reply("* Запрос контактов *", {
         reply_markup: new Keyboard().requestContact("Нажмите сюда").resized().oneTime()
     });
     const {
         contact: {message: {phone_number} = {}} = {}
-    } = await conversation.waitFor(":contact");
+    } = await conversation.waitFor(":contact", inputErrorHandler);
     await ctx.reply("* Выбор категории *", {
         reply_markup: Keyboard.from([Object.keys(categories)]).toFlowed(1).resized().oneTime()
     });
-    const category_name = await conversation.form.select(Object.keys(categories));
+    const category_name = await conversation.form.select(Object.keys(categories), inputErrorHandler);
     const category = categories[category_name];
     switch (category) {
         case "media":
@@ -97,19 +99,19 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
     await ctx.reply("* Выбор трансфера *", {
         reply_markup: Keyboard.from([Object.keys(transports)]).toFlowed(1).resized().oneTime()
     });
-    const transport_name = await conversation.form.select(Object.keys(transports));
+    const transport_name = await conversation.form.select(Object.keys(transports), inputErrorHandler);
     const transport = transports[transport_name];
     Object.assign(conversation.session.profile, {first_name, last_name, phone_number, category, transport});
     switch (transport) {
         case "transfer":
             await ctx.reply("* Запрос адреса *");
-            const address = await conversation.form.text();
+            const address = await conversation.form.text(inputErrorHandler);
             await ctx.reply("* Запрос времени *");
-            const time = await conversation.form.text();
+            const time = await conversation.form.text(inputErrorHandler);
             Object.assign(conversation.session, {address, time});
     }
     await ctx.reply("* Запрос дополнительных вопросов *");
-    const requests = await conversation.form.text();
+    const requests = await conversation.form.text(inputErrorHandler);
     Object.assign(conversation.session, {requests});
     await ctx.reply("* Благодарность *");
 }
