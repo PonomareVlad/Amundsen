@@ -61,6 +61,8 @@ bot.use(
 
 bot.use(conversations());
 
+bot.command("start", (ctx, next) => next(ctx.conversation.exit("registration")));
+
 async function registration(/** @type {Conversation<BotContext>} */ conversation, ctx) {
     conversation.session.profile = {};
     await ctx.reply("* Приветствие *");
@@ -75,7 +77,10 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
     await ctx.reply("* Запрос контактов *", {
         reply_markup: new Keyboard().requestContact("Нажмите сюда").resized().oneTime()
     });
-    const contact = await conversation.waitFor(":contact");
+    const {
+        contact: {message: {phone_number} = {}} = {}
+    } = await conversation.waitFor(":contact");
+    console.debug(phone_number);
     await ctx.reply("* Выбор категории *", {
         reply_markup: Keyboard.from([Object.keys(categories)]).toFlowed(1).resized().oneTime()
     });
@@ -112,7 +117,7 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
 
 bot.use(createConversation(registration, "registration"));
 
-bot.command("start", ctx => ctx.conversation.enter("registration"));
+bot.command("start", ctx => ctx.conversation.reenter("registration"));
 
 // Sample handler for a simple echo bot
 bot.on("message:text", ctx => ctx.reply(ctx.msg.text));
