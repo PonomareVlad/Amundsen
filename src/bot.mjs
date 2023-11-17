@@ -106,16 +106,35 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
     Object.assign(conversation.session.profile, {first_name, last_name, phone_number, category, transport});
     switch (transport) {
         case "transfer":
-            await ctx.reply("* Запрос адреса *");
+            await ctx.reply("* Запрос адреса *", {
+                reply_markup: {
+                    force_reply: true,
+                    input_field_placeholder: "* Введите адрес *"
+                }
+            });
             const address = await conversation.form.text(inputErrorHandler);
-            await ctx.reply("* Запрос времени *");
+            await ctx.reply("* Запрос времени *", {
+                reply_markup: {
+                    force_reply: true,
+                    input_field_placeholder: "* Введите время *"
+                }
+            });
             const time = await conversation.form.text(inputErrorHandler);
             Object.assign(conversation.session, {address, time});
     }
-    await ctx.reply("* Запрос дополнительных вопросов *");
+    await ctx.reply("* Запрос дополнительных вопросов *", {
+        reply_markup: {
+            force_reply: true,
+            input_field_placeholder: "* Введите вопросы *"
+        }
+    });
     const requests = await conversation.form.text(inputErrorHandler);
     Object.assign(conversation.session, {requests});
-    await ctx.reply("* Благодарность *");
+    await ctx.reply("* Благодарность *", {
+        reply_markup: {
+            remove_keyboard: true
+        }
+    });
 }
 
 bot.use(createConversation(registration, "registration"));
