@@ -63,9 +63,11 @@ bot.use(conversations());
 
 bot.command("start", (ctx, next) => next(ctx.conversation.exit("registration")));
 
-const inputErrorHandler = ctx => ctx.reply("* ошибка в формате *");
-
 async function registration(/** @type {Conversation<BotContext>} */ conversation, ctx) {
+    const inputErrorHandler = async ctx => {
+        await ctx.reply("* ошибка в формате *");
+        await conversation.skip({drop: true});
+    };
     conversation.session.profile = {};
     await ctx.reply("* Приветствие *");
     await ctx.reply("* Запрос имени *", {
