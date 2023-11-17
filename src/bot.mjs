@@ -141,4 +141,4 @@ bot.use(createConversation(registration, "registration"));
 
 bot.command("start", ctx => ctx.conversation.reenter("registration"));
 
-bot.on("message:text", ctx => ctx.reply("* Ожидание рассылки *"));
+bot.on("msg", ctx => ctx.reply("* Ожидание рассылки *"));
