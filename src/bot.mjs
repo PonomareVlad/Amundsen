@@ -31,6 +31,10 @@ export const {
 
 } = process.env;
 
+const buttons = {
+    skip: "Пропустить"
+}
+
 const categories = {
     "СМИ": "media",
     "Риелтор": "realtor",
@@ -61,7 +65,9 @@ bot.use(
 
 bot.use(conversations());
 
-bot.command("start", (ctx, next) => next(ctx.conversation.exit("registration")));
+bot.use((ctx, next) => next(ctx.session.chat = ctx.chat));
+
+bot.command("start", (ctx, next) => next(ctx.conversation.exit()));
 
 async function registration(/** @type {Conversation<BotContext>} */ conversation, ctx) {
     const inputErrorHandler = async ctx => {
@@ -71,11 +77,11 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
     conversation.session.profile = {};
     await ctx.reply("* Приветствие *");
     await ctx.reply("* Запрос имени *", {
-        reply_markup: Keyboard.from([[ctx.chat.first_name]]).resized().oneTime()
+        reply_markup: ctx.chat.first_name ? Keyboard.from([[ctx.chat.first_name]]).resized().oneTime() : undefined
     });
     const first_name = await conversation.form.text(inputErrorHandler);
     await ctx.reply("* Запрос фамилии *", {
-        reply_markup: Keyboard.from([[ctx.chat.last_name]]).resized().oneTime()
+        reply_markup: ctx.chat.last_name ? Keyboard.from([[ctx.chat.last_name]]).resized().oneTime() : undefined
     });
     const last_name = await conversation.form.text(inputErrorHandler);
     await ctx.reply("* Запрос контактов *", {
@@ -123,13 +129,11 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
             Object.assign(conversation.session, {address, time});
     }
     await ctx.reply("* Запрос дополнительных вопросов *", {
-        reply_markup: {
-            force_reply: true,
-            input_field_placeholder: "* Введите вопросы *"
-        }
+        reply_markup: Keyboard.from([[buttons.skip]]).resized().oneTime()
     });
     const requests = await conversation.form.text(inputErrorHandler);
-    Object.assign(conversation.session, {requests});
+    if (requests.trim() && requests !== buttons.skip)
+        Object.assign(conversation.session, {requests});
     await ctx.reply("* Благодарность *", {
         reply_markup: {
             remove_keyboard: true
