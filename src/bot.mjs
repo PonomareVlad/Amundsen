@@ -13,7 +13,7 @@ import {conversations, createConversation} from "@grammyjs/conversations";
  * @typedef {import("@grammyjs/conversations").Conversation} Conversation
  * @typedef {import("@grammyjs/conversations").ConversationFlavor} ConversationFlavor
  *
- * @typedef {{registered: Date, profile: Record<string, string>} & Chat} SessionData
+ * @typedef {{registered: Date, profile: Record<string, any>, chat: Chat}} SessionData
  * @typedef {Context & ConversationFlavor & SessionFlavor<SessionData>} BotContext
  */
 
