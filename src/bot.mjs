@@ -119,7 +119,7 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
 
 Мероприятие пройдет с 15:00 до 17:00.`);
             break;
-        case "transfer":
+        default:
             switch (category) {
                 case "partner":
                     await ctx.reply(`Компания Progress предоставляет партнерам трансфер.
@@ -128,8 +128,7 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
 
 Дресс-код: smart casual.`);
                     break;
-                case "media":
-                case "blogger":
+                default:
                     await ctx.reply(`Мы подготовили автомобиль бизнес-класса!   
 
 Напиши свой адрес и время, чтобы водитель смог тебя привезти на мероприятие. Оно пройдет с 15:00 до 17:00 на улице Академика Ландау, 3.`, {
@@ -148,5 +147,49 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
 bot.use(createConversation(registration, "registration"));
 
 bot.command("start", ctx => ctx.conversation.reenter("registration"));
+
+bot.command("tomorrow", async ctx => {
+    switch (ctx.session.transport) {
+        case "car":
+            await ctx.reply(`Открываем завтра вместе Атриум ЖК Amundsen! 
+
+ЖК Amundsen находится на улице Академика Ландау, 3. Мероприятие пройдет с 15:00 до 17:00.
+
+Дресс-код: smart casual.`);
+            break;
+        default:
+            switch (ctx.session.category) {
+                case "partner":
+                    await ctx.reply(`Увидимся уже завтра на открытии Атриум ЖК Amundsen! Готовишься к началу экспедиции?
+
+Напоминаю, что трансфер будет ждать возле офиса продаж ЖК Amundsen в 14:30 на улице Вильгельма-де Геннина, 47.
+
+После мероприятия трансфер доставит тебя обратно.`);
+                    break;
+                default:
+                    await ctx.reply(`Увидимся уже завтра на открытии Атриум ЖК Amundsen! Готовишься к началу экспедиции? 
+
+Личный трансфер будет ждать тебя по адресу ${ctx.session.transfer || ""}.
+
+Тебя встретит водитель (имя, номер телефона) на машине (марка, цвет машины, номер).
+
+На этом же автомобиле водитель доставит тебя обратно.`);
+            }
+    }
+});
+
+bot.command("soon", ctx => ctx.reply(`Привет! Наша экспедиция состоится через три дня.
+
+Progress ждет исследователей и авантюристов на открытии Атриума ЖК Amundsen.
+
+Встреча пройдет с 15:00 до 17:00 на улице Академика Ландау, 3.
+
+Дресс-код: smart casual.`));
+
+bot.command("today", ctx => ctx.reply(`Какой прекрасный день! Ветер попутный, компас ведет нас на север, а новый Атриум ЖК Amundsen готов к открытию!
+
+Встреча пройдет с 15:00 до 17:00 на улице Академика Ландау, 3.
+
+Дресс-код: smart casual.`));
 
 bot.on("msg", ctx => ctx.reply("* Ожидание рассылки *"));
