@@ -81,7 +81,7 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
 Я твой друг и проводник по открытию Атриума ЖК Amundsen!
 
 Главного авантюриста ты знаешь. Давай знакомиться с тобой!`, {
-        reply_markup: new Keyboard().requestContact("Давай").resized().oneTime()
+        reply_markup: new Keyboard().requestContact("А давай!").resized().oneTime()
     });
     const {
         contact: {message: {phone_number} = {}} = {}
