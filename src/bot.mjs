@@ -76,17 +76,16 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
     };
     const {first_name, last_name} = ctx.chat;
     conversation.session.profile = {};
-    /* await ctx.replyWithVideo("BAACAgIAAxkBAAIB22VZi7uv5T73cV7woY8mi1bTV87RAAKnPQACNDm4Spm0TI8uhHwDMwQ", {
-        caption: `Дорогой гость!
+    await ctx.reply(`Дорогой гость!
 
 Я твой друг и проводник по открытию Атриума ЖК Amundsen!
 
-Главного авантюриста ты знаешь. Давай знакомиться с тобой!`,
+Главного авантюриста ты знаешь. Давай знакомиться с тобой!`, {
         reply_markup: new Keyboard().requestContact("Давай").resized().oneTime()
-    }); */
-    /* const {
+    });
+    const {
         contact: {message: {phone_number} = {}} = {}
-    } = await conversation.waitFor(":contact", inputErrorHandler); */
+    } = await conversation.waitFor(":contact", inputErrorHandler);
     await ctx.reply("Отправь мне ФИО", {
         reply_markup: {
             force_reply: true,
