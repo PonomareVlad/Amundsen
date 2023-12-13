@@ -84,9 +84,9 @@ async function registration(/** @type {Conversation<BotContext>} */ conversation
 Главного авантюриста ты знаешь. Давай знакомиться с тобой!`,
         reply_markup: new Keyboard().requestContact("Давай").resized().oneTime()
     }); */
-    const {
+    /* const {
         contact: {message: {phone_number} = {}} = {}
-    } = await conversation.waitFor(":contact", inputErrorHandler);
+    } = await conversation.waitFor(":contact", inputErrorHandler); */
     await ctx.reply("Отправь мне ФИО", {
         reply_markup: {
             force_reply: true,
