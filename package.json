@@ -11,7 +11,7 @@
     "start": "node --watch -r dotenv/config scripts/start.mjs"
   },
   "dependencies": {
-    "@grammyjs/conversations": "^1.1.2",
+    "@grammyjs/conversations": "^1.2.0",
     "@grammyjs/storage-mongodb": "^2.4.0",
     "grammy": "^1.19.1",
     "grammy-debug-edge": "^0.0.0",
