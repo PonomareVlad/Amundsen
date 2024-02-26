@@ -19,7 +19,7 @@
     "vercel-grammy": "^0.2.2"
   },
   "devDependencies": {
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.4.5"
   },
   "overrides": {
     "bson": "npm:@ponomarevlad/bson@6.2.0-no-tla.2",
